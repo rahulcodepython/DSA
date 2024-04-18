@@ -28,23 +28,23 @@ int main()
         scanf("%d", &choice);
         switch (choice)
         {
-            case 1:
-                printf("Create a linked list.\n");
-                head = create_node();
-                break;
-            case 2:
-                print_node(head);
-                break;
-            case 3:
-                head = inset_value(head);
-                break;
-            case 4:
-                head = delete_node(head);
-                break;
-            default:
-                printf("You have terminated the program.");
-                controller = false;
-                break;
+        case 1:
+            printf("Create a linked list.\n");
+            head = create_node();
+            break;
+        case 2:
+            print_node(head);
+            break;
+        case 3:
+            head = inset_value(head);
+            break;
+        case 4:
+            head = delete_node(head);
+            break;
+        default:
+            printf("You have terminated the program.");
+            controller = false;
+            break;
         }
     }
     return 0;
@@ -88,7 +88,7 @@ struct listNode *inset_value(struct listNode *head)
     int index, val;
     int i = 1;
     printf("Insert a value in the linked list.\n");
-    printf("Enter the index where you want to add the value: ");
+    printf("Enter the index where you want to add the value and Enter -1 to add value at the end: ");
     scanf("%d", &index);
     printf("Enter the value which you want to add: ");
     scanf("%d", &val);
@@ -99,6 +99,16 @@ struct listNode *inset_value(struct listNode *head)
         newNode->next = head;
         head = newNode;
     }
+    else if (index == -1)
+    {
+        current = head;
+        while (current->next != NULL)
+        {
+            current = current->next;
+        }
+        current->next = newNode;
+        newNode->next = NULL;
+    }
     else
     {
         current = head;
@@ -106,20 +116,26 @@ struct listNode *inset_value(struct listNode *head)
         {
             if (i == index - 1)
             {
-                newNode->next = current->next;
-                current->next = newNode;
                 break;
             }
             current = current->next;
             i++;
         }
+        if (current == NULL)
+        {
+            printf("Index out of range.\n");
+            return head;
+        }
+        newNode->next = current->next;
+        current->next = newNode;
     }
     return head;
 }
 
 struct listNode *delete_node(struct listNode *head)
 {
-    int index;
+    struct listNode *current, *temp;
+    int index, i = 1;
     printf("Delete a value from the linked list.\n");
     printf("Enter the index where you want to delete the value: ");
     scanf("%d", &index);
@@ -128,12 +144,21 @@ struct listNode *delete_node(struct listNode *head)
         printf("List is empty.\n");
         return NULL;
     }
-    struct listNode *current, *temp;
-    int i = 1;
     if (index == 1)
     {
         temp = head;
         head = head->next;
+        free(temp);
+    }
+    else if (index == -1)
+    {
+        current = head;
+        while (current->next->next != NULL)
+        {
+            current = current->next;
+        }
+        temp = current->next;
+        current->next = NULL;
         free(temp);
     }
     else
@@ -143,18 +168,20 @@ struct listNode *delete_node(struct listNode *head)
         {
             if (i == index - 1)
             {
-                temp = current->next;
-                if (temp == NULL) {
-                    printf("Index out of range.\n");
-                    return head;
-                }
-                current->next = temp->next;
-                free(temp);
                 break;
             }
             current = current->next;
             i++;
         }
+        if (current == NULL)
+        {
+            printf("Index out of range.\n");
+            return head;
+        }
+
+        temp = current->next;
+        current->next = current->next->next;
+        free(temp);
     }
     return head;
 }
