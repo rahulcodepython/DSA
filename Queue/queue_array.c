@@ -29,61 +29,36 @@ int main()
     q->rear = -1;
     while (controller)
     {
-        printf("1. Create a queue\n");
-        printf("2. Display the queue\n");
-        printf("3. Check if the queue is full\n");
-        printf("4. Check if the queue is empty\n");
-        printf("5. Enqueue\n");
-        printf("6. Dequeue\n");
-        printf("7. Peek\n");
-        printf("8. Size of the queue\n");
+        printf("1. Display the queue\n");
+        printf("2. Check if the queue is full\n");
+        printf("3. Check if the queue is empty\n");
+        printf("4. Enqueue\n");
+        printf("5. Dequeue\n");
+        printf("6. Peek\n");
+        printf("7. Size of the queue\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
         switch (choice)
         {
         case 1:
-            create_queue(q);
-            break;
-        case 2:
-            if (isFull(q))
-            {
-                printf("The queue is full.\n");
-            }
-            else
-            {
-                printf("The queue is not full.\n");
-            }
-            break;
-        case 3:
-            if (isEmpty(q))
-            {
-                printf("The queue is empty.\n");
-            }
-            else
-            {
-                printf("The queue is not empty.\n");
-            }
-            break;
-        case 4:
             display_queue(q);
             break;
-        case 5:
+        case 2:
+            isFull(q) ? printf("The queue is full.\n") : printf("The queue is not full.\n");
+            break;
+        case 3:
+            isEmpty(q) ? printf("The queue is empty.\n") : printf("The queue is not empty.\n");
+            break;
+        case 4:
             enqueue(q);
             break;
-        case 6:
+        case 5:
             dequeue(q);
             break;
-        case 7:
-            if (isEmpty(q))
-            {
-                printf("The queue is empty.\n");
-            }
-            else
-            {
-                printf("Peek is %d.\n", q->arr[q->front]);
-            }
+        case 6:
+            printf("The peek element is %d.\n", q->arr[q->front]);
             break;
-        case 8:
+        case 7:
             printf("The size of the queue occupied is %d.\n", q->rear + 1);
             break;
         default:
@@ -95,36 +70,6 @@ int main()
     free(q->arr);
     free(q);
     return 0;
-}
-
-void create_queue(struct queue *q)
-{
-    int data;
-    bool controller = true;
-    if (isFull(q))
-    {
-        printf("The queue is full.\n");
-    }
-    else
-    {
-        if (q->front == -1)
-        {
-            q->front = 0;
-        }
-        while (controller && !isFull(q))
-        {
-            printf("Enter the data: ");
-            scanf("%d", &data);
-            if (data >= 0)
-            {
-                q->arr[++q->rear] = data;
-            }
-            else
-            {
-                controller = false;
-            }
-        }
-    }
 }
 
 bool isFull(struct queue *q)

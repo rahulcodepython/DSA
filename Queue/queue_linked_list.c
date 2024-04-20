@@ -15,7 +15,6 @@ struct queue
     struct node *head;
 };
 
-struct node *create_queue(struct queue *q);
 void display_queue(struct queue *q);
 bool isFull(struct queue *q);
 bool isEmpty(struct queue *q);
@@ -32,55 +31,36 @@ int main()
     q->head = NULL;
     while (controller)
     {
-        printf("1. Create a queue\n");
-        printf("2. Display the queue\n");
-        printf("3. Check if the queue is full\n");
-        printf("4. Check if the queue is empty\n");
-        printf("5. Enqueue\n");
-        printf("6. Dequeue\n");
-        printf("7. Peek\n");
-        printf("8. Size of the queue\n");
+        printf("1. Display the queue\n");
+        printf("2. Check if the queue is full\n");
+        printf("3. Check if the queue is empty\n");
+        printf("4. Enqueue\n");
+        printf("5. Dequeue\n");
+        printf("6. Peek\n");
+        printf("7. Size of the queue\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
         switch (choice)
         {
         case 1:
-            q->head = create_queue(q);
-            q->front++;
-            break;
-        case 2:
             display_queue(q);
             break;
+        case 2:
+            isFull(q) ? printf("The queue is full.\n") : printf("The queue is not full.\n");
+            break;
         case 3:
-            if (isFull(q))
-            {
-                printf("The queue is full.\n");
-            }
-            else
-            {
-                printf("The queue is not full.\n");
-            }
+            isEmpty(q) ? printf("The queue is empty.\n") : printf("The queue is not empty.\n");
             break;
         case 4:
-            if (isEmpty(q))
-            {
-                printf("The queue is empty.\n");
-            }
-            else
-            {
-                printf("The queue is not empty.\n");
-            }
-            break;
-        case 5:
             enqueue(q);
             break;
-        case 6:
+        case 5:
             dequeue(q);
             break;
-        case 7:
+        case 6:
             printf("Peek is %d\n", q->head->data);
             break;
-        case 8:
+        case 7:
             printf("The size of the queue is %d\n", q->rear + 1);
             break;
         default:
@@ -92,26 +72,6 @@ int main()
     free(q->head);
     free(q);
     return 0;
-}
-
-struct node *create_queue(struct queue *q)
-{
-    int data;
-    struct node *new_node = (struct node *)malloc(sizeof(struct node));
-    printf("Enter the data: ");
-    scanf("%d", &data);
-    if (data < 0)
-    {
-        free(new_node);
-        return NULL;
-    }
-    else
-    {
-        new_node->data = data;
-        q->rear++;
-        new_node->next = create_queue(q);
-    }
-    return new_node;
 }
 
 bool isFull(struct queue *q)
