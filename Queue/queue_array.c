@@ -10,7 +10,6 @@ struct queue
     int *arr;
 };
 
-void create_queue(struct queue *q);
 bool isFull(struct queue *q);
 bool isEmpty(struct queue *q);
 void display_queue(struct queue *q);

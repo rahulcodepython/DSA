@@ -1,69 +1,202 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 
-struct listNode
+struct node
 {
-    int val;
-    struct listNode *next;
+    int data;
+    struct node *next;
 };
 
-struct listNode *create_node(struct listNode *head);
-void print_node(struct listNode *head);
-// struct listNode *insert_value(struct listNode *head);
-// struct listNode *delete_node(struct listNode *head);
+struct node *start = NULL;
+
+struct node *create_cll(struct node *start);
+struct node *display(struct node *start);
+struct node *insert_beg(struct node *start);
+struct node *insert_end(struct node *start);
+struct node *delete_beg(struct node *start);
+struct node *delete_end(struct node *start);
+struct node *delete_after(struct node *start);
+struct node *delete_list(struct node *start);
 
 int main()
 {
-    struct listNode *head = NULL;
-    int choice;
-    bool controller = true;
-    while (controller)
+    int option;
+    do
     {
-        printf("Enter 1 for create a linked list: \n");
-        printf("Enter 2 for print a linked list: \n");
-        printf("Enter 3 for insert a value in linked list: \n");
-        printf("Enter 4 for delete a value from the linked list: \n");
-        printf("Enter any other number to terminate the program.\n");
-        printf("Enter your choice: ");
-        scanf("%d", &choice);
-        switch (choice)
+        printf("\n 1: Create a list");
+        printf("\n 2: Display the list");
+        printf("\n 3: Add a node at the beginning");
+        printf("\n 4: Add a node at the end");
+        printf("\n 5: Delete a node from the beginning");
+        printf("\n 6: Delete a node from the end");
+        printf("\n 7: Delete a node after a given node");
+        printf("\n 8: Delete the entire list");
+        printf("\n 9: EXIT");
+        printf("\n\n Enter your option : ");
+        scanf("%d", &option);
+        switch (option)
         {
         case 1:
-            printf("Create a circular linked list.\n");
-            head = create_node(head);
+            start = create_cll(start);
+            printf("\n CIRCULAR LINKED LIST CREATED");
             break;
         case 2:
-            print_node(head);
+            start = display(start);
             break;
-        // case 3:
-        //     head = insert_value(head);
-        //     break;
-        // case 4:
-        //     head = delete_node(head);
-        //     break;
-        default:
-            printf("You have terminated the program.\n");
-            controller = false;
+        case 3:
+            start = insert_beg(start);
+            break;
+        case 4:
+            start = insert_end(start);
+            break;
+        case 5:
+            start = delete_beg(start);
+            break;
+        case 6:
+            start = delete_end(start);
+            break;
+        case 7:
+            start = delete_after(start);
+            break;
+        case 8:
+            start = delete_list(start);
+            printf("\n CIRCULAR LINKED LIST DELETED");
             break;
         }
-    }
+    } while (option != 9);
+
     return 0;
 }
 
-void print_node(struct listNode *head)
+struct node *create_cll(struct node *start)
 {
-    if (head == NULL)
+    struct node *new_node, *ptr;
+    int num;
+    printf("\n Enter -1 to end");
+    printf("\n Enter the data : ");
+    scanf("%d", &num);
+    while (num != -1)
     {
-        printf("List is empty.\n");
-        return;
+        new_node = (struct node *)malloc(sizeof(struct node));
+        new_node->data = num;
+        if (start == NULL)
+        {
+            new_node->next = new_node;
+            start = new_node;
+        }
+        else
+        {
+            ptr = start;
+            while (ptr->next != start)
+                ptr = ptr->next;
+            ptr->next = new_node;
+            new_node->next = start;
+        }
+        printf("\n Enter the data : ");
+        scanf("%d", &num);
     }
-    struct listNode *current = head;
-    printf("Print all values of the circular linked list: \n");
+    return start;
+}
+
+struct node *display(struct node *start)
+{
+    struct node *ptr;
+    ptr = start;
+    while (ptr->next != start)
+    {
+        printf("\t %d", ptr->data);
+        ptr = ptr->next;
+    }
+    printf("\t %d", ptr->data);
+    return start;
+}
+
+struct node *insert_beg(struct node *start)
+{
+    struct node *new_node, *ptr;
+    int num;
+    printf("\n Enter the data : ");
+    scanf("%d", &num);
+    new_node = (struct node *)malloc(sizeof(struct node));
+    new_node->data = num;
+    ptr = start;
+    while (ptr->next != start)
+        ptr = ptr->next;
+    ptr->next = new_node;
+    new_node->next = start;
+    start = new_node;
+    return start;
+}
+
+struct node *insert_end(struct node *start)
+{
+    struct node *ptr, *new_node;
+    int num;
+    printf("\n Enter the data : ");
+    scanf("%d", &num);
+    new_node = (struct node *)malloc(sizeof(struct node));
+    new_node->data = num;
+    ptr = start;
+    while (ptr->next != start)
+        ptr = ptr->next;
+    ptr->next = new_node;
+    new_node->next = start;
+    return start;
+}
+
+struct node *delete_beg(struct node *start)
+{
+    struct node *ptr;
+    ptr = start;
+    while (ptr->next != start)
+        ptr = ptr->next;
+    ptr->next = start->next;
+    free(start);
+    start = ptr->next;
+    return start;
+}
+
+struct node *delete_end(struct node *start)
+{
+    struct node *ptr, *preptr;
+    ptr = start;
+    while (ptr->next != start)
+    {
+        preptr = ptr;
+        ptr = ptr->next;
+    }
+    preptr->next = ptr->next;
+    free(ptr);
+    return start;
+}
+
+struct node *delete_after(struct node *start)
+{
+    struct node *ptr, *preptr;
+    int val;
+    printf("\n Enter the value after which the node has to be deleted : ");
+    scanf("%d", &val);
+    ptr = start;
     do
     {
-        printf("%d\t", current->val);
-        current = current->next;
-    } while (current != head);
-    printf("\n");
+        preptr = ptr;
+        ptr = ptr->next;
+        if (preptr->data == val)
+            break;
+    } while (ptr->next != start);
+    preptr->next = ptr->next;
+    if (ptr == start)
+        start = preptr->next;
+    free(ptr);
+    return start;
+}
+
+struct node *delete_list(struct node *start)
+{
+    struct node *ptr;
+    ptr = start;
+    while (ptr->next != start)
+        start = delete_end(start);
+    free(start);
+    return start;
 }
